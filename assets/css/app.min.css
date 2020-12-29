@@ -1,0 +1,175 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Ubuntu", serif;
+}
+
+@font-face {
+    font-family: "Ubuntu";
+    src: url("../fonts/power.woff2") format("woff2");
+}
+
+.loading-container {
+    color:#fff;
+    font-family:poppins,Arial,sans-serif;
+    text-shadow:0 1px 0 rgba(0,0,0,.05);
+    text-align:center;
+    font-size:22px;
+    font-weight:500;
+}
+
+.loading-container #loading-background {
+    background:linear-gradient(-45deg,#EE7752,#E73C7E,#23A6D5,#22d2d5);
+    background-size:200% 200%;
+}
+
+.loading-container,.loading-container #loading-background,.loading-container .loading-content {
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:650;
+}
+
+.loading-container .loading-content {
+    width:330px;
+    height:165px;
+    margin:auto;
+}
+
+.loading-container .loading-content a {
+    color:#fff;
+}
+
+.page-loading {
+    background-color:rgba(255,255,255,.6);
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:1999;
+    display:none;
+}
+
+.version {
+	text-decoration: underline;
+    font-size: 10px
+}
+
+.updater {
+    position: fixed;
+    height: 100%;
+    display: block;
+    width: 100%;
+    z-index: 999999;
+}
+
+iframe {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+}
+
+.buttons {
+    z-index: 99999;
+    margin-top: 20px;
+    position: fixed;
+    background: rgba(58, 56, 50, 0.9);
+    right: 0;
+    bottom: 100px;
+    width: 50px;
+    border-radius: 10px 0 0 10px;
+}
+
+.buttons .button {
+    position: relative;
+    z-index: 9999;
+    height: 36px;
+    left: 8px;
+    margin-top: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 4px;
+    width: 36px;
+    cursor: pointer;
+    border-radius: 100%;
+}
+
+.buttons .button:hover .tooltip {
+    display: block;
+}
+
+.buttons .button .tooltip {
+    position: absolute;
+    background: white;
+    display: none;
+    padding: 8px 10px;
+    text-align: center;
+    right: 60px;
+    width: 100px;
+    box-shadow: 0 0 6px #0000006e;
+    border-radius: 10px;
+}
+
+.buttons .button .tooltip .arrow {
+    width: 0;
+    right: -6px;
+    top: 12px;
+    height: 0;
+    position: absolute;
+    border-style: solid;
+    border-width: 5px 0 5px 6px;
+    border-color: transparent transparent transparent #ffffff;
+}
+
+.buttons .button .icon {
+    height: 30px;
+    width: 30px;
+}
+
+.buttons .button .home {
+    background: url('../img/home.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.buttons .button .hotel {
+    background: url('../img/hotel.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.buttons .button .screen {
+    background: url('../img/screen.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.buttons .button .cache {
+    background: url('../img/cache.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.buttons .button .out {
+    background: url('../img/out.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.buttons .button .in {
+    background: url('../img/in.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.buttons #hotel {
+    display: none;
+}
