@@ -1,23 +1,26 @@
-const {app, BrowserWindow, Menu, ipcMain} = require('electron');
+const {app, BrowserWindow, Menu, ipcMain, globalShortcut} = require('electron');
 const {autoUpdater} = require("electron-updater");
 
 const path = require('path');
+const package = require('./package');
 const url = require('url');
 
 let pluginName;
 let pluginVersion;
 let mainWindow;
+
 switch (process.platform) {
     case 'win32':
         if (process.arch === "x32" || process.arch === "ia32") {
             pluginName = 'pepflashplayer-32.dll';
-            pluginVersion = '32.0.0.465';
+            pluginVersion = '32.0.0.363';
         } else {
             pluginName = 'pepflashplayer.dll';
-            pluginVersion = '20.0.0.306';
+            pluginVersion = '32.0.0.363';
         }
         break;
 }
+
 app.commandLine.appendSwitch("disable-renderer-backgrounding");
 app.commandLine.appendSwitch('high-dpi-support', "1");
 app.commandLine.appendSwitch('force-device-scale-factor', "1");
@@ -29,9 +32,10 @@ Menu.setApplicationMenu(null)
 let sendWindow = (identifier, message) => {
     mainWindow.webContents.send(identifier, message);
 };
+
 let createWindow = async () => {
     mainWindow = new BrowserWindow({
-        title: "Leet Hotel",
+        title: package.productName,
         icon: path.join(__dirname, '/icon.ico'),
         webPreferences: {
             plugins: true,
@@ -67,9 +71,23 @@ let createWindow = async () => {
     });
 
     sendWindow("version", app.getVersion());
-    //mainWindow.webContents.openDevTools();
 
-    ipcMain.on('clearcache', async () => {
+    if (package.debug) {
+        mainWindow.webContents.openDevTools();
+    } else {
+        globalShortcut.register("CTRL+SHIFT+F10", () => {
+            mainWindow.webContents.openDevTools();
+        });
+    }
+
+    ipcMain.on('cache', async () => {
+        let session = mainWindow.webContents.session;
+        await session.clearCache();
+        app.relaunch();
+        app.exit();
+    });
+
+    ipcMain.on('webCache', async () => {
         let session = mainWindow.webContents.session;
         await session.clearCache();
         app.relaunch();
@@ -81,7 +99,6 @@ let createWindow = async () => {
             mainWindow.setFullScreen(false);
         else
             mainWindow.setFullScreen(true);
-
     });
 
     ipcMain.on('zoomOut', () => {
@@ -96,6 +113,10 @@ let createWindow = async () => {
         if (factor < 3) {
             mainWindow.webContents.setZoomFactor(factor + 0.01);
         }
+    });
+
+    ipcMain.on('reload', () => {
+        mainWindow.reload();
     });
 };
 
