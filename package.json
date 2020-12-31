@@ -3,7 +3,7 @@
   "productName": "Leet Hotel",
   "url": "https://www.leet.nl",
   "debug": false,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "app.js",
   "description": "Leet: Een virtuele wereld waar je vrienden kunt maken en ontmoeten.",
   "author": "Asteroid Games",

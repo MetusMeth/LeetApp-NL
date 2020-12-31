@@ -250,11 +250,13 @@
 			setTimeout(() => {
 				document.getElementById("reload-icon").classList.remove("fa-spin");
 			}, 1800);
-			ipcRenderer.send("reload", "");
+			const activeFrame = document.querySelector('[tabindex = "0"]');
+       	 	activeFrame.src = activeFrame.src;
 		});
 
 		webReload.addEventListener('click', () => {
-			ipcRenderer.send("reload", "");
+			const activeFrame = document.querySelector('[tabindex = "0"]');
+       	 	activeFrame.src = activeFrame.src;
 		});
 
 		const alert = document.getElementById("alert");
