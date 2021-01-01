@@ -45,11 +45,6 @@
 					<img src="assets/img/home.gif" draggable="false" style="vertical-align: -5.5px; margin-right: 4px;">
 					<span>Home</span>
 				</li>
-
-				<li id="hotel" class="tab" style="display: none">
-					<img src="assets/img/hotel.gif" draggable="false" style="vertical-align: -5.5px; margin-right: 4px;">
-					<span>Hotel</span>
-				</li>
 			</ul>
 		</nav>
 
@@ -126,7 +121,7 @@
 		const package = require('./package');
 
 		var iframe = document.getElementById('home-frame');
-		iframe.setAttribute('src', package.url + '/?app=true');
+		iframe.setAttribute('src', package.homepage + '/?app=true');
 		iframe.setAttribute('tabindex', 0);
 
 		const {ipcRenderer} = require('electron');
@@ -151,9 +146,6 @@
 			progression.innerHTML = "installeren... " + Math.round(data['percent']) + "%";
 		});
 
-		const home = document.getElementById("home");
-		const hotel = document.getElementById("hotel");
-
 		const zoomIn = document.getElementById("zoomIn");
 		const zoomOut = document.getElementById("zoomOut");
 		const reload = document.getElementById("reload");
@@ -169,14 +161,21 @@
 		let navigation = document.getElementById("navigation");
 		let hotelFrame = document.getElementById("hotel-frame");
 		let homeFrame = document.getElementById("home-frame");
-		let hotelButton = document.getElementById("hotel");
 		let homeButton = document.getElementById("home");
+
+		function enterFacebook() {
+			ipcRenderer.send("facebook", "");
+		}
+
+		function redirectFacebook() {
+			homeFrame.src = package.homepage + "/facebook";
+		}
 
 		function enterHotel() {
 			if (!hotelFrame) {
 				hotelFrame = document.createElement("iframe");
 				hotelFrame.id = "hotel-frame";
-				hotelFrame.src = package.url + "/client";
+				hotelFrame.src = package.homepage + "/hotel";
 				document.body.appendChild(hotelFrame);
 			}
 
@@ -188,8 +187,6 @@
 			homeFrame.tabIndex = 0;
 			hotelFrame.style.visibility = "hidden";
 			homeFrame.style.visibility = "visible";
-			hotelButton.style.display = "inline-block";
-			homeButton.style.display = "none";
 			hotelHeader.style.display = "none";
 			webHeader.style.display = "inline-block";
 		}
@@ -199,26 +196,20 @@
 			homeFrame.tabIndex = -1;
 			hotelFrame.style.visibility = "visible";
 			homeFrame.style.visibility = "hidden";
-			hotelButton.style.display = "none";
-			homeButton.style.display = "inline-block";
 			hotelHeader.style.display = "inline-block";
-			home.classList.add("notransition");
-			home.offsetHeight;
-			home.classList.remove("notransition");
+			homeButton.classList.add("notransition");
+			homeButton.offsetHeight;
+			homeButton.classList.remove("notransition");
 			webHeader.style.display = "none";
 		}
 
-		home.addEventListener('click', () => {
+		homeButton.addEventListener('click', () => {
 			if (!hotelFrame) {
-				homeFrame.src = package.url + "/?app=true";
+				homeFrame.src = package.homepage + "/?app=true";
 				return;
 			}
 
 			showHomeScreen();
-		});
-
-		hotel.addEventListener('click', () => {
-			showHotelScreen()
 		});
 
 		zoomOut.addEventListener('click', () => {

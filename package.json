@@ -1,12 +1,16 @@
 {
   "name": "leethotel",
   "productName": "Leet Hotel",
-  "url": "https://www.leet.nl",
   "debug": false,
-  "version": "1.0.4",
+  "version": "1.0.5",
+  "clientId": 983112518448310,
   "main": "app.js",
   "description": "Leet: Een virtuele wereld waar je vrienden kunt maken en ontmoeten.",
-  "author": "Asteroid Games",
+  "homepage": "https://www.leet.nl",
+  "author": {
+    "name": "Asteroid Games",
+    "email": "info@leet.nl"
+  },
   "scripts": {
     "start": "electron .",
     "publish": "electron-builder --win -p always",

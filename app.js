@@ -24,7 +24,7 @@ switch (process.platform) {
 app.commandLine.appendSwitch("disable-renderer-backgrounding");
 app.commandLine.appendSwitch('high-dpi-support', "1");
 app.commandLine.appendSwitch('force-device-scale-factor', "1");
-
+app.commandLine.appendSwitch("--enable-npapi");
 app.commandLine.appendSwitch('ppapi-flash-path', path.join(__dirname.includes(".asar") ? process.resourcesPath : __dirname, "flash/" + pluginName));
 
 Menu.setApplicationMenu(null)
@@ -45,6 +45,7 @@ let createWindow = async () => {
             webSecurity: false
         },
         show: false,
+        frame: true,
         backgroundColor: "#000",
     });
     mainWindow.maximize();
@@ -68,6 +69,15 @@ let createWindow = async () => {
 
         event.preventDefault();
         mainWindow.webContents.executeJavaScript('enterHotel();');
+    });
+
+    mainWindow.webContents.on("new-window", function(event, url) {
+        if (url.indexOf("/facebook") === -1) {
+            return;
+        }
+
+        event.preventDefault();
+        mainWindow.webContents.executeJavaScript('enterFacebook();');
     });
 
     sendWindow("version", app.getVersion());
@@ -117,6 +127,58 @@ let createWindow = async () => {
 
     ipcMain.on('reload', () => {
         mainWindow.reload();
+    });
+
+    ipcMain.on('facebook', function (event, arg) {
+        var options = {
+            client_id: package.clientId,
+            scopes: 'email',
+            redirect_uri: 'https://www.facebook.com/connect/login_success.html'
+        };
+
+        var authWindow = new BrowserWindow({
+            width: 600,
+            height: 300,
+            show: false,
+            parent: mainWindow,
+            modal: true,
+            webPreferences: {
+                nodeIntegration: false
+            }
+        });
+
+        var facebookAuthURL = `https://www.facebook.com/v3.2/dialog/oauth?client_id=${options.client_id}&redirect_uri=${options.redirect_uri}&response_type=token,granted_scopes&scope=${options.scopes}&display=popup`;
+
+        authWindow.loadURL(facebookAuthURL);
+        authWindow.webContents.on('did-finish-load', function () {
+            authWindow.show();
+        });
+
+        var access_token, error;
+        var closedByUser = true;
+
+        var handleUrl = function (url) {
+            var raw_code = /access_token=([^&]*)/.exec(url) || null;
+            access_token = (raw_code && raw_code.length > 1) ? raw_code[1] : null;
+            error = /\?error=(.+)$/.exec(url);
+
+            if (access_token || error) {
+                closedByUser = false;
+                mainWindow.webContents.executeJavaScript('redirectFacebook();');
+                authWindow.close();
+            }
+        }
+
+        authWindow.webContents.on('will-navigate', (event, url) => handleUrl(url));
+        var filter = {
+            urls: [options.redirect_uri + '*']
+        };
+        mainWindow.webContents.session.webRequest.onCompleted(filter, (details) => {
+            var url = details.url;
+            handleUrl(url);
+        });
+
+        authWindow.on('close', () => event.returnValue = closedByUser ? { error: 'The popup window was closed' } : { access_token, error })
     });
 };
 
