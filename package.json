@@ -2,11 +2,10 @@
   "name": "leethotel",
   "productName": "Leet Hotel",
   "debug": false,
-  "version": "1.0.5",
-  "clientId": 983112518448310,
+  "version": "1.0.7",
   "main": "app.js",
-  "description": "Leet: Een virtuele wereld waar je vrienden kunt maken en ontmoeten.",
-  "homepage": "https://www.leet.nl",
+  "description": "Leet Hotel: Een virtuele wereld waar je vrienden kunt maken en ontmoeten.",
+  "homepage": "https://www.leet.ws",
   "author": {
     "name": "Asteroid Games",
     "email": "info@leet.nl"

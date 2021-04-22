@@ -7,7 +7,7 @@
 <body>
 	<div id="alert" class="alert">
 		<div class="box">
-			<div class="title">Weet je het zeker?</div>
+			<div id="title" class="title">Weet je het zeker?</div>
 			<div id="description" class="description">We zullen de LeetApp opnieuw opstarten tijdens het legen van de cache.</div>
 			<div class="btns">
 				<div id="cancel" class="button" style="float:left;background: #ed1c24;">
@@ -19,21 +19,6 @@
 					<div class="alpha"></div>
 					Bevestig
 				</div>
-			</div>
-		</div>
-	</div>
-
-	<div id="updater" class="updater">
-		<div class="loading-container">
-			<div id="loading-background"></div>
-			<div class="loading-content">
-				<div class="center">
-					<span></span>
-					<img src="assets/img/loading.gif">
-				</div>
-				<div id="connection" class="loading-bodytext">Leet is aan het <font id="progression" class="progression">laden...</font></div>
-				<div class="loading-bodytext">
-					<div id="version" class="version"></div></div>
 			</div>
 		</div>
 	</div>
@@ -118,32 +103,29 @@
 	<iframe id="home-frame"></iframe>
 
 	<script>
-		const package = require('./package');
+		let ipcRenderer = window.ipcRenderer;
+		let updater = document.getElementById("updater");
+		let progression = document.getElementById("progression");
+		let version = document.getElementById("version");
 
 		var iframe = document.getElementById('home-frame');
-		iframe.setAttribute('src', package.homepage + '/?app=true');
+		iframe.setAttribute('src', 'https://www.leet.ws/?app=true');
 		iframe.setAttribute('tabindex', 0);
-
-		const {ipcRenderer} = require('electron');
-		const updater = document.getElementById("updater");
-		const progression = document.getElementById("progression");
-		const version = document.getElementById("version");
 
 		ipcRenderer.on("version", (event, data) => {
 			version.innerHTML = data;
 		});
 
 		ipcRenderer.on("checking-for-update", (event, data) => {
-			updater.style.display = "block";
+
 		});
 
 		ipcRenderer.on("update-not-available", (event, data) => {
-			updater.style.display = "none";
-			updater.innerHTML = "";
+
 		});
 
 		ipcRenderer.on("download-progress", (event, data) => {
-			progression.innerHTML = "installeren... " + Math.round(data['percent']) + "%";
+
 		});
 
 		const zoomIn = document.getElementById("zoomIn");
@@ -158,7 +140,6 @@
 
 		let webHeader = document.getElementById("web-header");
 		let hotelHeader = document.getElementById("hotel-header");
-		let navigation = document.getElementById("navigation");
 		let hotelFrame = document.getElementById("hotel-frame");
 		let homeFrame = document.getElementById("home-frame");
 		let homeButton = document.getElementById("home");
@@ -168,14 +149,14 @@
 		}
 
 		function redirectFacebook() {
-			homeFrame.src = package.homepage + "/facebook";
+			homeFrame.src = "https://www.leet.ws/facebook";
 		}
 
 		function enterHotel() {
 			if (!hotelFrame) {
 				hotelFrame = document.createElement("iframe");
 				hotelFrame.id = "hotel-frame";
-				hotelFrame.src = package.homepage + "/hotel";
+				hotelFrame.src = "https://www.leet.ws/hotel";
 				document.body.appendChild(hotelFrame);
 			}
 
@@ -205,7 +186,7 @@
 
 		homeButton.addEventListener('click', () => {
 			if (!hotelFrame) {
-				homeFrame.src = package.homepage + "/?app=true";
+				homeFrame.src = "https://www.leet.ws/?app=true";
 				return;
 			}
 
